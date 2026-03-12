@@ -1,0 +1,64 @@
+name: Lint and Format
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Use Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 18.x
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Run ESLint
+      run: npm run lint:js
+      continue-on-error: false
+    
+    - name: Run Prettier check
+      run: npm run format:check
+    
+    - name: Run Markdown lint
+      run: npm run lint:md
+    
+    - name: Run YAML lint
+      run: npm run lint:yaml
+    
+    - name: Check for circular dependencies
+      run: npm run check:circular
+    
+    - name: Run commitlint on PR
+      if: github.event_name == 'pull_request'
+      run: npx commitlint --from ${{ github.event.pull_request.base.sha }} --to ${{ github.event.pull_request.head.sha }} --verbose
+    
+    - name: Run shellcheck
+      run: |
+        find . -name "*.sh" -type f -exec shellcheck {} \;
+    
+    - name: Run dockerfile lint
+      run: |
+        npm run lint:dockerfile
+    
+    - name: Auto-fix issues
+      if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
+      run: |
+        npm run format:fix
+        npm run lint:fix
+    
+    - name: Commit fixes
+      if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
+      uses: stefanzweifel/git-auto-commit-action@v4
+      with:
+        commit_message: "style: auto-fix linting issues"
+        branch: develop
