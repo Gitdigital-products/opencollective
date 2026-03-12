@@ -1,0 +1,121 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      target: development
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/gitdigital
+      - REDIS_URL=redis://redis:6379
+    volumes:
+      - .:/app
+      - /app/node_modules
+    depends_on:
+      - db
+      - redis
+    networks:
+      - gitdigital-network
+
+  db:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=gitdigital
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - gitdigital-network
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - gitdigital-network
+
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@gitdigital.io
+      - PGADMIN_DEFAULT_PASSWORD=admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - db
+    networks:
+      - gitdigital-network
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./ssl:/etc/nginx/ssl
+    depends_on:
+      - app
+    networks:
+      - gitdigital-network
+
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+    networks:
+      - gitdigital-network
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - "3001:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - grafana-data:/var/lib/grafana
+    depends_on:
+      - prometheus
+    networks:
+      - gitdigital-network
+
+  # Production services
+  app-prod:
+    build:
+      context: .
+      target: production
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=${DATABASE_URL}
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - redis
+    networks:
+      - gitdigital-network
+    deploy:
+      replicas: 3
+      restart_policy:
+        condition: on-failure
+
+volumes:
+  postgres-data:
+  redis-data:
+  prometheus-data:
+  grafana-data:
+
+networks:
+  gitdigital-network:
+    driver: bridge
