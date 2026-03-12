@@ -1,3 +1,58 @@
+# OpenCollective GitDigital
+
+**Transparent, community-governed funding for GitDigital Products**
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Open Collective](https://opencollective.com/gitdigital/tiers/badge.svg)](https://opencollective.com/gitdigital)
+[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](CODE_OF_CONDUCT.md)
+
+## Overview
+
+OpenCollective GitDigital is the financial backbone of the GitDigital ecosystem. This repository manages the transparent budgeting, expense tracking, and grant distribution for all GitDigital Products projects, including the Aurora ZK Cryptography Framework.
+
+We believe in **radical transparency** and **community governance**. Every financial transaction, every grant decision, and every budget allocation is documented here for public review.
+
+## Key Features
+
+- **Transparent Budgeting** – All income and expenses publicly documented
+- **Community Grants** – Fund development of cryptography tools and infrastructure
+- **Expense Management** – Clear policies for contributor reimbursement
+- **Milestone Tracking** – Fund releases tied to verifiable technical achievements
+- **Governance Framework** – Multi-stakeholder decision-making process
+
+## Quick Links
+
+- [Budget Overview](open-collective/budget.md)
+- [Active Grants](open-collective/grant-structure.md)
+- [Expense Policy](open-collective/expense-policy.md)
+- [Roadmap](open-collective/roadmap.md)
+- [Contributors](open-collective/contributors.md)
+
+## How to Get Involved
+
+1. **Contribute Code** – See [CONTRIBUTING.md](CONTRIBUTING.md)
+2. **Apply for a Grant** – Review [grant-structure.md](open-collective/grant-structure.md)
+3. **Submit Expenses** – Follow [expense-policy.md](open-collective/expense-policy.md)
+4. **Join Discussions** – Participate in GitHub Issues and Discussions
+
+## Governance
+
+GitDigital Products follows a **community-first governance model**. Major financial decisions require:
+- Technical Advisory Board review
+- Core maintainers approval
+- Public comment period
+
+See [GOVERNANCE.md](GOVERNANCE.md) for complete details.
+
+## Security
+
+Report security vulnerabilities to security@gitdigital.io.  
+See [SECURITY.md](SECURITY.md) for our disclosure policy.
+
+## License
+
+MIT © GitDigital Products
+
 [![Open Collective](https://img.shields.io/opencollective/all/solana-project-funds?label=Backers%20%26%20Sponsors)](https://opencollective.com/solana-project-funds)
 [![Financial Contributors](https://opencollective.com/solana-project-funds/tiers/badge.svg)](https://opencollective.com/solana-project-funds)
 
