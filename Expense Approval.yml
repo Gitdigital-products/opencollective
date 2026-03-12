@@ -1,0 +1,27 @@
+{
+  "id": "log_20250315_exp_789",
+  "timestamp": "2025-03-15T10:23:45Z",
+  "type": "expense.approved",
+  "category": "financial",
+  "actor": {
+    "id": "user_jordan_taylor",
+    "type": "user"
+  },
+  "action": "approve",
+  "resource": {
+    "type": "expense",
+    "id": "exp_20250314_456"
+  },
+  "data": {
+    "amount": 2500,
+    "currency": "USD",
+    "category": "development",
+    "submitter": "user_sarah_chen",
+    "approval_level": "finance_committee"
+  },
+  "outcome": "success",
+  "metadata": {
+    "version": "1.0",
+    "environment": "production"
+  }
+}
