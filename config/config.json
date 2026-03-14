@@ -1,0 +1,29 @@
+config/config.json
+
+```json
+{
+  "app": {
+    "name": "Open Collective Implementation",
+    "version": "1.0.0",
+    "environment": "development",
+    "port": 3000
+  },
+  "opencollective": {
+    "apiUrl": "https://api.opencollective.com/v2",
+    "graphqlEndpoint": "https://api.opencollective.com/graphql/v2",
+    "webhookSecret": "",
+    "defaultCurrency": "USD"
+  },
+  "features": {
+    "webhooks": true,
+    "emailNotifications": true,
+    "autoApproval": false,
+    "analytics": true
+  },
+  "limits": {
+    "maxCollectivesPerUser": 10,
+    "maxMembersPerCollective": 100,
+    "requestRateLimit": 100
+  }
+}
+```
