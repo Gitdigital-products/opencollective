@@ -1,3 +1,48 @@
+package.json
+
+```json
+{
+  "name": "opencollective-implementation",
+  "version": "1.0.0",
+  "description": "A comprehensive implementation for Open Collective platforms",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "lint": "eslint .",
+    "setup": "./scripts/setup.sh",
+    "install:deps": "./scripts/install.sh"
+  },
+  "keywords": [
+    "open-collective",
+    "collective",
+    "funding",
+    "community",
+    "opensource"
+  ],
+  "author": "Open Collective Implementation Team",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "axios": "^1.6.0",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "nodemon": "^3.0.1",
+    "eslint": "^8.54.0"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-org/opencollective-implementation.git"
+  }
+}
+```
 {
   "name": "@solana-zk-kyc/sdk",
   "version": "1.0.0",
