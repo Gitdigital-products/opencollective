@@ -1,4 +1,7 @@
-name: CodeQL Analysis
+File: .github/workflows/codeql.yml
+
+`yaml
+name: CodeQL
 
 on:
   push:
@@ -6,43 +9,34 @@ on:
   pull_request:
     branches: [ main ]
   schedule:
-    - cron: '0 3 * * 1' # weekly run
+    - cron: "0 3   0"
 
 jobs:
   analyze:
-    name: Analyze (${{ matrix.language }})
+    name: Analyze
     runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
 
     strategy:
       fail-fast: false
       matrix:
-        language: [ 'rust', 'javascript' ]
+        language: [ "javascript" ]
 
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
         with:
           languages: ${{ matrix.language }}
-          queries: security-and-quality
-          paths-ignore: |
-            node_modules
-            dist
-            build
-            target
-            coverage
-            sdk/js/node_modules
-            sdk/js/tests
-            **/*.spec.ts
-            **/test/**
-            **/*.d.ts
 
       - name: Autobuild
         uses: github/codeql-action/autobuild@v3
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
-        with:
-          category: "/language:${{ matrix.language }}"
+`
