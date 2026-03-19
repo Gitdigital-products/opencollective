@@ -1,0 +1,64 @@
+File: .github/workflows/trigger-map.yml
+
+`yaml
+name: Trigger Map
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - "src/"
+      - "packages/"
+      - ".github/workflows/"
+      - "README.md"
+
+jobs:
+  trigger-map:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Evaluate trigger map
+        run: |
+          echo "Evaluating trigger map..."
+          git diff --name-only HEAD~1 HEAD || true
+
+          echo "This is where you later:
+          - map file changes to:
+            - docs rebuild
+            - badge wall updates
+            - banner regeneration
+            - downstream repo triggers
+          "
+`
+
+File: .github/workflows/badge-updater.yml
+
+`yaml
+name: Badge Authority Updater
+
+on:
+  workflow_run:
+    workflows: [ "CI" ]
+    types:
+      - completed
+
+jobs:
+  update-badges:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Update badge surfaces
+        run: |
+          echo "CI completed with status: ${{ github.event.workflow_run.conclusion }}"
+          echo "In future:
+          - Update badge wall markdown
+          - Regenerate cryptography banner
+          - Commit changes to docs/wiki
+          "
+`
