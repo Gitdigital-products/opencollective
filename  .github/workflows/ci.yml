@@ -1,0 +1,180 @@
+File: .github/workflows/ci.yml
+
+`yaml
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [16, 18, 20]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: yarn
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Typecheck (if applicable)
+        run: |
+          if yarn run | grep -q "typecheck"; then
+            yarn typecheck
+          else
+            echo "No typecheck script, skipping."
+          fi
+
+      - name: Build
+        run: |
+          if yarn run | grep -q "build"; then
+            yarn build
+          else
+            echo "No build script, skipping."
+          fi
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: yarn
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Lint
+        run: |
+          if yarn run | grep -q "lint"; then
+            yarn lint
+          else
+            echo "No lint script, skipping."
+          fi
+
+      - name: Format check
+        run: |
+          if yarn run | grep -q "format:check"; then
+            yarn format:check
+          else
+            echo "No format:check script, skipping."
+          fi
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    needs: build
+
+    services:
+      postgres:
+        image: postgres:13
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: testdb
+        options: >-
+          --health-cmd="pg_isready -U postgres"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    env:
+      NODE_ENV: test
+      DATABASE_URL: postgres://postgres:postgres@localhost:5432/testdb
+      OC_ENV: test
+      CI: true
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: yarn
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Run migrations check (if script exists)
+        run: |
+          if yarn run | grep -q "migrate:check"; then
+            yarn migrate:check
+          else
+            echo "No migrate:check script, skipping."
+          fi
+
+      - name: Test
+        run: |
+          if yarn run | grep -q "test"; then
+            yarn test --runInBand
+          else
+            echo "No test script, skipping."
+          fi
+
+  governance:
+    name: Governance & Identity Check
+    runs-on: ubuntu-latest
+    needs: [build, lint, test]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Governance check
+        run: |
+          echo "Running governance checks..."
+          missing=0
+
+          for file in README.md LICENSE package.json .github/ISSUETEMPLATE .github/PULLREQUEST_TEMPLATE.md; do
+            if [ ! -e "$file" ]; then
+              echo "Missing required governance file: $file"
+              missing=1
+            fi
+          done
+
+          if ! grep -qi "Gitdigital" README.md; then
+            echo "README.md does not reference Gitdigital identity."
+            missing=1
+          fi
+
+          if ! grep -qi "OpenCollective" README.md; then
+            echo "README.md does not reference Open Collective identity."
+            missing=1
+          fi
+
+          if [ $missing -ne 0 ]; then
+            echo "Governance checks failed."
+            exit 1
+          fi
+
+          echo "Governance checks passed."
+`
+
+Add this badge to your README:
+
+`md
+!CI
+`
