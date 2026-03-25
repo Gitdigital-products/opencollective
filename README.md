@@ -4,9 +4,9 @@
 
 <noscript><a href="https://liberapay.com/GitDigital_liberapay/donate"><img alt="Donate using Liberapay" src="https://liberapay.com/assets/widgets/donate.svg"></a></noscript>
 ```
-```md
+md
 https://img.shields.io/liberapay/goal/GitDigital_liberapay.svg?logo=liberapay
-```
+
 
 ```js
 https://liberapay.com/GitDigital_liberapay/widgets/button.js
